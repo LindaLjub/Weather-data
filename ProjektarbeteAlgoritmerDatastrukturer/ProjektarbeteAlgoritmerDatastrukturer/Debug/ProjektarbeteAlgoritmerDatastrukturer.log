@@ -1,0 +1,7 @@
+﻿  ProjektarbeteAD.cpp
+  activities.cpp
+c:\users\linda\source\repos\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(336): warning C4018: '<': signed/unsigned mismatch
+c:\users\linda\source\repos\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(351): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+c:\users\linda\source\repos\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(234): warning C4715: 'activities::searchDay': not all control paths return a value
+  ProjektarbeteAlgoritmerDatastrukturer.vcxproj -> C:\Users\Linda\source\repos\ProjektarbeteAlgoritmerDatastrukturer\Debug\ProjektarbeteAlgoritmerDatastrukturer.exe
