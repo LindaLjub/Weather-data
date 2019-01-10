@@ -153,14 +153,12 @@
   <ItemGroup>
     <ClInclude Include="activities.h" />
     <ClInclude Include="AverageAll.h" />
-    <ClInclude Include="AverageDay.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="theData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="activities.cpp" />
     <ClCompile Include="AverageAll.cpp" />
-    <ClCompile Include="AverageDay.cpp" />
     <ClCompile Include="ProjektarbeteAD.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

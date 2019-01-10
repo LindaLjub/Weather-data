@@ -24,9 +24,6 @@
     <ClInclude Include="activities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AverageDay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AverageAll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,9 +39,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="activities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AverageDay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AverageAll.cpp">

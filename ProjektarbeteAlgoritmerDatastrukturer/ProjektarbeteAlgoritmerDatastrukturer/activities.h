@@ -11,15 +11,12 @@ private:
 	std::vector<theData *> outside;
 	std::vector<theData *> inside;
 
-	//pekarvectorer av typen "AverageDay".
-	std::vector<AverageDay *> AverageOutside;
-	std::vector<AverageDay *> AverageInside;
-
-	std::vector<AverageAll *> Average; // testar med bool
+	// vector till alla medelvärden
+	std::vector<AverageAll *> Average; 
 
 	// variabler
 	std::string answer, searchDate;
-	int sizeVectorOutside, sizeVectorInside, sizeVectorAverageOut, sizeVectorAverageIn;
+	int sizeVectorOutside, sizeVectorInside, checkDate = 0;
 
 public:
 	activities();
@@ -30,17 +27,12 @@ public:
 	void menuInside();		// Undermeny inomhus
 	void menuOutside();		// Undermeny utomhus
 
+	void average(); // Räknar ut medelvärde.
 	void printAverage(std::string); // Printar medeltemp alla dagar.
-	double searchDay(std::string, std::string, std::string); // Hittar rätt day, returnerar medeltemp.
-	void testAverage();	// hittar unika dagar.
-	void testCount(std::string, float &, float &, std::string); //Räknar ut medelvärde.
-
+	void searchDay(std::string, std::string); // Hittar rätt day, returnerar medeltemp.
 	void metrologisk(); // Hittar dagen för metrologisk höst och vinter.
 	void mould();		// Mögelrisk.
 	void printMould(); // printar ut mögelrisk.
-
-
-
 
 
 };

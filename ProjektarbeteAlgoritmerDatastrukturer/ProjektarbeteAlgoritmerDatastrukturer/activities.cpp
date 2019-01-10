@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "activities.h"
-//#include <stdlib.h>
 #include <fstream>
 #include <string>
 
@@ -8,7 +7,7 @@
 activities::activities()
 {
 	indata();
-	testAverage();
+	average();
 	mould();
 
 }
@@ -27,15 +26,12 @@ activities::~activities()
 		delete outside[i];
 	}
 
-	for (int i = 0; i < sizeVectorAverageIn; i++)
+	for (int i = 0; i < Average.size() ; i++)
 	{
-		delete AverageInside[i];
+		delete Average[i];
 	}
 
-	for (int i = 0; i < sizeVectorAverageOut; i++)
-	{
-		delete AverageOutside[i];
-	}
+
 }
 
 // Metod som hämtar in data från fil.
@@ -114,38 +110,23 @@ void activities::menuOne()
 // Undermeny inomhus
 void activities::menuInside()
 {
-	double dummy;
 	bool goMenuIn = false;
 	do {
-		std::cout << " INDOOR MENU\n [1] --\n [2] Search for average temp by date \n [3] Daily average temp & humidity \n [4] Go back" << std::endl;
+		std::cout << " INDOOR MENU\n [1] Search for average temp by date \n [2] Daily average temp & humidity \n [3] Go back" << std::endl;
 		std::cin >> answer;
 		answer = toupper(answer[0]);
 		switch (answer[0])
 		{
 		case '1':
-			break;
-		case '2':
 			std::cout << " Please insert date (in this format 2016-10-01): ";
 			std::cin >> searchDate;
 			std::cout << " You searched for: " << searchDate << std::endl;
-			dummy = searchDay(searchDate, "In", "temp");
-			
-			std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-				if (dummy != 0)
-				{
-					std::cout << " Average temperature: " << dummy << std::endl;
-				}
-				else
-				{
-					std::cout << " Date not found.. " << std::endl;
-				}
-			std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-
+			searchDay(searchDate, "In");
+			break;
+		case '2':
+			printAverage("In"); // printar medelvärden inne.
 			break;
 		case '3':
-			printAverage("In"); // printar medeltemp inne.
-			break;
-		case '4':
 			menuOne();
 			goMenuIn = true;
 			break;
@@ -158,7 +139,6 @@ void activities::menuInside()
 // Undermeny utomhus
 void activities::menuOutside()
 {
-	double dummy;
 	bool goMenuOut = false;
 	do {
 		std::cout << " OUTDOOR MENU\n [1] Autum/Winter \n [2] Search for average temp by date\n [3] Daily average temp & humidity \n [4] Mouldrisk \n [5] Go back" << std::endl;
@@ -173,19 +153,7 @@ void activities::menuOutside()
 			std::cout << " Please insert date (in this format 2016-10-01): ";
 			std::cin >> searchDate;
 			std::cout << " You searched for: " << searchDate << std::endl;
-			dummy = searchDay(searchDate, "Out", "temp");
-
-			std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-				if (dummy != 0)
-				{
-					std::cout << " Average temperature: " << dummy << std::endl;
-				}
-				else
-				{
-					std::cout << " Date not found.. " << std::endl;
-				}
-			std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-		
+			searchDay(searchDate, "Out");	
 			break;
 		case '3':
 			printAverage("Out"); // Printar medeltemp ute.
@@ -204,176 +172,159 @@ void activities::menuOutside()
 }
 
 // Hittar rätt day, returnerar medeltemp/medelfuktighet
-double activities::searchDay(std::string date, std::string enviroment, std::string what)
+void activities::searchDay(std::string date, std::string enviroment)
 {
-	// Medel temperaturen INNE
-	if (enviroment == "In" && what == "temp")
-	{
+	checkDate = 0;
+	float dummy = 0;
 
-		for (int i = 0; i < sizeVectorAverageIn; i++)
+	// Medel temperaturen INNE
+	if (enviroment == "In")
+	{
+		for (int i = 0; i < Average.size(); i++)
 		{
-			if (AverageInside[i]->get_a_date() == date) // Kollar bara inomhus.
+			if (Average[i]->get_a_date() == date && Average[i]->get_indoor() == true) 
 			{
-				return AverageInside[i]->get_averageTemp();
+				dummy =  Average[i]->get_averageTemp();
+				checkDate = 1;
 			}
 		}
 
 	}
 
 	// Medel temperaturen UTE
-	else if (enviroment == "Out" && what == "temp")
+	else if (enviroment == "Out")
 	{
-		for (int i = 0; i < sizeVectorAverageOut; i++)
+		for (int i = 0; i < Average.size(); i++)
 		{
-			if (AverageOutside[i]->get_a_date() == date) // Kollar bara inomhus.
+			if (Average[i]->get_a_date() == date && Average[i]->get_indoor() == false)
 			{
-				return AverageOutside[i]->get_averageTemp();
+				dummy = Average[i]->get_averageTemp();
+				checkDate = 1;
 			}
+			
 		}
 	}
 
+	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
+	if (checkDate != 0)
+	{
+		std::cout << " Average temperature: " << dummy << std::endl;
+	}
 	else
-		return 0;
+	{
+		std::cout << " Date not found." << std::endl;
+	}
+	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
+
+
 
 }
 
-// hittar unika dagar.
-void activities::testAverage()
+// Räknar ut medelvärde.
+void activities::average()
 {
 	/* medelvärden inne */
-	float changeTemp, changeHum;
-	std::string datum;
 
-	datum = inside[0]->get_date(); 	// Hämta medeltemp och medelfukt.
-	testCount("In", changeTemp, changeHum, datum); // ändrar changeTemp & changeHum till medelvärden.
-	AverageInside.push_back(new AverageDay(datum, changeTemp, changeHum));
+	std::string datum;
+	int counter = 1;
+	float summa = inside[0]->get_temp();
+	float summa2 = inside[0]->get_moist();
 
 	for (int i = 0; i < sizeVectorInside - 2; i++) // kollar hela vectorn.
 	{
-		// Om de datum brevid varandra INTE är samma, ger unika datum. Varje datum endast EN gång.
-		if (inside[i]->get_date() != inside[i + 1]->get_date())
+		// om datumen brevid varandra är samma.
+		if (inside[i]->get_date() == inside[i + 1]->get_date())
 		{
+			// medeltemp.
+			summa = summa + inside[i + 1]->get_temp();
+				
+			// medelfuktighet.
+			summa2 = summa2 + inside[i]->get_moist();
+			counter++;
+		}
 
-			// Hämta medeltemp och medelfukt.
-			datum = inside[i + 1]->get_date();
-			testCount("In", changeTemp, changeHum, datum);
-			AverageInside.push_back(new AverageDay(datum, changeTemp, changeHum));
+		else 
+		{
+			datum = inside[i]->get_date();
+			Average.push_back(new AverageAll(datum, (summa / counter), (summa2 / counter), true)); // test test
 
-			Average.push_back(new AverageAll(datum, changeTemp, changeHum, true)); // test test
+			summa = 0, summa2 = 0;
+
+			summa = inside[i + 1]->get_temp();
+			summa2 = inside[i + 1]->get_moist();
+
+			counter = 1;
+
 		}
 	}
 
 
-	//* medelvärden ute */
+	/* medelvärden ute */
 
-	datum = outside[0]->get_date();
-	testCount("Out", changeTemp, changeHum, datum);
-	AverageOutside.push_back(new AverageDay(datum, changeTemp, changeHum));
+	counter = 1;
+	summa = outside[0]->get_temp();
+	summa2 = outside[0]->get_moist();
 
-	for (int i = 0; i < sizeVectorOutside - 2; i++)
+	for (int i = 0; i < sizeVectorOutside - 2; i++) // kollar hela vectorn.
 	{
-		// Om de datum brevid varandra INTE är samma, ger unika datum. Varje datum endast EN gång.
-		if (outside[i]->get_date() != outside[i + 1]->get_date())
+		// om datumen brevid varandra är samma.
+		if (outside[i]->get_date() == outside[i + 1]->get_date())
+		{
+			// medeltemp.
+			summa = summa + outside[i + 1]->get_temp();
+
+			// medelfuktighet.
+			summa2 = summa2 + outside[i]->get_moist();
+			counter++;
+		}
+
+		else
 		{
 			datum = outside[i]->get_date();
-			testCount("Out", changeTemp, changeHum, datum);
-			AverageOutside.push_back(new AverageDay(datum, changeTemp, changeHum));
+			Average.push_back(new AverageAll(datum, (summa / counter), (summa2 / counter), false)); 
+
+			summa = 0, summa2 = 0;
+
+			summa = outside[i + 1]->get_temp();
+			summa2 = outside[i + 1]->get_moist();
+
+			counter = 1;
+
 		}
 	}
 
-	sizeVectorAverageIn = AverageInside.size();
-	sizeVectorAverageOut = AverageOutside.size();
-}
 
-//Räknar ut medelvärde.
-void activities::testCount(std::string en, float &temp, float &hum, std::string date)
-{
-	int counter = 0, counter2 = 0;
-	float summa = 0, summa2 = 0;
+	//sizeVectorAverageIn = AverageInside.size();
+	//sizeVectorAverageOut = AverageOutside.size();
 
-	if (en == "In")
-	{ 
-		for (int i = 0; i < sizeVectorInside; i++)  // Loopar så många gånger som den hämtat indata till "inomhus".
-		{
-			if (inside[i]->get_date() == date) // Kollar bara inomhus.
-			{
-				// medeltemp.
-				summa = summa + inside[i]->get_temp();
-				counter++; 
 
-				// medelfuktighet.
-				summa2 = summa2 + inside[i]->get_moist();
-				counter2++; 
-			}
-		}
 
-		temp = summa / counter;
-		hum = summa2 / counter2;
-
-	}
-
-		else if (en == "Out")
-		{ 
-			for (int i = 0; i < sizeVectorOutside; i++)  // Loopar så många gånger som den hämtat indata till "inomhus".
-			{
-				if (outside[i]->get_date() == date) // Kollar bara inomhus.
-				{
-					// medeltemp.
-					summa = summa + outside[i]->get_temp();
-					counter++;
-
-					// medelfuktighet.
-					summa2 = summa2 + outside[i]->get_moist();
-					counter2++;
-				}
-			}
-
-			temp = summa / counter;
-			hum = summa2 / counter2;
-		}
 }
 
 // Printar medeltemp alla dagar.
 void activities::printAverage(std::string enviroment)
 {
-	std::cout << " --- --- --- " << std::endl;
+	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
+
 	for (int i = 0; i < Average.size(); i++)
 	{
 
-		std::cout << Average[i]->get_a_date() << " AVERAGE \nAverage temp: "
-			<< Average[i]->get_averageTemp() << std::endl;
-
-		std::cout << "average !!! Average humidity: " << AverageInside[i]->get_averageMoist() << std::endl;
-		std::cout << " --- --- ---  " << std::endl;
-
-	}
-
-
-	if (enviroment == "In")
-	{
-		std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-		for (int i = 0; i < AverageInside.size(); i++)
+		if (enviroment == "In" && Average[i]->get_indoor() == true)
 		{
-		
-			std::cout << AverageInside[i]->get_a_date() << " Indoor \nAverage temp: "
-				<< AverageInside[i]->get_averageTemp() << std::endl;
-
-			std::cout << "Average humidity: " << AverageInside[i]->get_averageMoist() << std::endl;
+			std::cout << " Indoor ";
+			std::cout << Average[i]->get_a_date() << "\n Average temp: "
+				<< Average[i]->get_averageTemp() << std::endl;
+			std::cout << " Average humidity: " << Average[i]->get_averageMoist() << std::endl;
 			std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
 
 		}
-	}
 
-	if (enviroment == "Out")
-	{
-		std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-		for (int i = 0; i < AverageOutside.size(); i++)
+		else if (enviroment == "Out" && Average[i]->get_indoor() == false)
 		{
-
-			std::cout << AverageOutside[i]->get_a_date() << " Outdoor \nAverage temp: "
-				<< AverageOutside[i]->get_averageTemp() << std::endl;
-
-			std::cout << "Average humidity: " << AverageOutside[i]->get_averageMoist() << std::endl;
+			std::cout << " Outdoor " ;
+			std::cout << Average[i]->get_a_date() << "\n Average temp: "
+			<< Average[i]->get_averageTemp() << std::endl;
+			std::cout << " Average humidity: " << Average[i]->get_averageMoist() << std::endl;
 			std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
 
 		}
@@ -383,24 +334,22 @@ void activities::printAverage(std::string enviroment)
 // Metrologisk höst/vinter
 void activities::metrologisk()
 {
-
 	/*Datum för metrologisk höst*/
-
-	for (int i = 0; i < sizeVectorAverageOut - 4; i++) // så den inte jämför den sista med ingenting.
+	for (int i = 0; i < Average.size() - 4; i++) // så den inte jämför den sista med ingenting.
 	{
 		// Om månaden är månad 8 eller senare.
-		if (AverageOutside[i]->get_a_date()[5] == 0 && AverageOutside[0]->get_a_date()[6] > 7 || AverageOutside[i]->get_a_date()[5] != 0)
+		if (Average[i]->get_a_date()[5] == 0 && Average[0]->get_a_date()[6] > 7 || Average[i]->get_a_date()[5] != 0)
 		{
 
-			if (AverageOutside[i]->get_averageTemp() < 10 &&
-				AverageOutside[i + 1]->get_averageTemp() < 10 &&
-				AverageOutside[i + 2]->get_averageTemp() < 10 &&
-				AverageOutside[i + 3]->get_averageTemp() < 10 &&
-				AverageOutside[i + 4]->get_averageTemp() < 10)
+			if (Average[i]->get_indoor() == false && Average[i]->get_averageTemp() < 10 &&
+				Average[i]->get_indoor() == false && Average[i + 1]->get_averageTemp() < 10 &&
+				Average[i + 2]->get_indoor() == false && Average[i + 2]->get_averageTemp() < 10 &&
+				Average[i + 3]->get_indoor() == false && Average[i + 3]->get_averageTemp() < 10 &&
+				Average[i + 4]->get_indoor() == false && Average[i + 4]->get_averageTemp() < 10)
 			{
 
-				std::cout << " Meteorological autumn starts : " << AverageOutside[i]->get_a_date() << std::endl;
-				i = sizeVectorAverageOut + 5;
+				std::cout << " Meteorological autumn starts : " << Average[i]->get_a_date() << "\n" << std::endl;
+				i = Average.size() + 5;
 
 			}
 
@@ -411,22 +360,22 @@ void activities::metrologisk()
 	/*Datum för metrologisk vinter*/
 	int check = 0;
 
-	for (int x = 0; x < sizeVectorAverageOut - 4; x++) // så den inte jämför den sista med ingenting.
+	for (int x = 0; x < Average.size() - 4; x++) // så den inte jämför den sista med ingenting.
 	{
 
 		// Kollar först alla månader 10-12. 
-		if (AverageOutside[x]->get_a_date()[5] != 0)
+		if (Average[x]->get_a_date()[5] != 0)
 		{
 
-			if (AverageOutside[x]->get_averageTemp() < 0 &&
-				AverageOutside[x + 1]->get_averageTemp() < 0 &&
-				AverageOutside[x + 2]->get_averageTemp() < 0 &&
-				AverageOutside[x + 3]->get_averageTemp() < 0 &&
-				AverageOutside[x + 4]->get_averageTemp() < 0)
+			if (Average[x]->get_indoor() == false && Average[x]->get_averageTemp() < 0 &&
+				Average[x + 1]->get_indoor() == false && Average[x + 1]->get_averageTemp() < 0 &&
+				Average[x + 2]->get_indoor() == false && Average[x + 2]->get_averageTemp() < 0 &&
+				Average[x + 3]->get_indoor() == false && Average[x + 3]->get_averageTemp() < 0 &&
+				Average[x + 4]->get_indoor() == false && Average[x + 4]->get_averageTemp() < 0)
 			{
 
-				std::cout << "1 Meteorological winter starts : " << AverageOutside[x]->get_a_date() << std::endl << std::endl;
-				x = sizeVectorAverageOut + 5; // stoppar loopen.
+				std::cout << "1 Meteorological winter starts : " << Average[x]->get_a_date() << std::endl << std::endl;
+				x = Average.size() + 5; // stoppar loopen.
 				check = 1; // stoppar sökandet.
 
 			}
@@ -436,22 +385,22 @@ void activities::metrologisk()
 
 	if (check == 0) // bara om den inte hittade något i första sökningen.
 	{
-		for (int x = 0; x < sizeVectorAverageOut - 4; x++) // så den inte jämför den sista med ingenting.
+		for (int x = 0; x < Average.size() - 4; x++) // så den inte jämför den sista med ingenting.
 		{
 
 			// Kollar sedan månaderna 1-9. Och även övergången mellan december-januari.
-			if (AverageOutside[x]->get_a_date()[5] == '1' && AverageOutside[x]->get_a_date()[6] == '2' || AverageOutside[x]->get_a_date()[5] == '0')
+			if (Average[x]->get_a_date()[5] == '1' && Average[x]->get_a_date()[6] == '2' || Average[x]->get_a_date()[5] == '0')
 			{
 
-				if (AverageOutside[x]->get_averageTemp() < 0 &&
-					AverageOutside[x + 1]->get_averageTemp() < 0 &&
-					AverageOutside[x + 2]->get_averageTemp() < 0 &&
-					AverageOutside[x + 3]->get_averageTemp() < 0 &&
-					AverageOutside[x + 4]->get_averageTemp() < 0)
+				if (Average[x]->get_indoor() == false && Average[x]->get_averageTemp() < 0 &&
+					Average[x + 1]->get_indoor() == false && Average[x + 1]->get_averageTemp() < 0 &&
+					Average[x + 2]->get_indoor() == false && Average[x + 2]->get_averageTemp() < 0 &&
+					Average[x + 3]->get_indoor() == false && Average[x + 3]->get_averageTemp() < 0 &&
+					Average[x + 4]->get_indoor() == false && Average[x + 4]->get_averageTemp() < 0 )
 				{
 
-					std::cout << "2 Meteorological winter starts : " << AverageOutside[x]->get_a_date() << std::endl << std::endl;
-					x = sizeVectorAverageOut + 5;
+					std::cout << "2 Meteorological winter starts : " << Average[x]->get_a_date() << std::endl << std::endl;
+					x = Average.size() + 5;
 
 				}
 
@@ -467,10 +416,10 @@ void activities::mould()
 
 	float fuktighet = 0, temp, mouldLine, mouldRisk;
 
-	for (int i = 0; i < sizeVectorAverageOut; i++)
+	for (int i = 0; i < Average.size(); i++)
 	{
 		// Hämtar in medeltemp.
-		temp = AverageOutside[i]->get_averageTemp();
+		temp = Average[i]->get_averageTemp();
 
 		// Hittar gränser för mögelrisk.
 		mouldLine = ((-0.0015 * temp) * (-0.0015 * temp) * (-0.0015 * temp))
@@ -478,75 +427,44 @@ void activities::mould()
 			- (2.9878 * temp) + 102.96;
 
 		// hämtar in fuktighet.
-		fuktighet = AverageOutside[i]->get_averageMoist();
+		fuktighet = Average[i]->get_averageMoist();
 
 		// mögelrisken blir
 		mouldRisk = fuktighet - mouldLine;
 
-		AverageOutside[i]->set_mouldRisk(mouldRisk);
+		Average[i]->set_mouldRisk(mouldRisk);
 
 		if (fuktighet > mouldLine)
 		{
-			AverageOutside[i]->set_mouldBool("high");
+			Average[i]->set_mouldBool("high");
 		}
 		else
 		{
-			AverageOutside[i]->set_mouldBool("low");
-		}
-	
-	}
-
-	for (int i = 0; i < sizeVectorAverageIn; i++)
-	{
-		// Hämtar in medeltemp.
-		temp = AverageInside[i]->get_averageTemp();
-
-		// Hittar gränser för mögelrisk.
-		mouldLine = ((-0.0015 * temp) * (-0.0015 * temp) * (-0.0015 * temp))
-			+ ((0.1193 * temp) * (0.1193 * temp))
-			- (2.9878 * temp) + 102.96;
-
-		// hämtar in fuktighet.
-		fuktighet = AverageOutside[i]->get_averageMoist();
-
-		// mögelrisken blir
-		mouldRisk = fuktighet - mouldLine;
-
-		AverageInside[i]->set_mouldRisk(mouldRisk);
-
-		if (fuktighet > mouldLine)
-		{
-			AverageInside[i]->set_mouldBool("high");
-		}
-		else
-		{
-			AverageInside[i]->set_mouldBool("low");
+			Average[i]->set_mouldBool("low");
 		}
 
 	}
-
 }
 
 // printar ut mögelrisk.
 void activities::printMould()
 {
-
 	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-	for (int i = 0; i < sizeVectorAverageOut; i++)
+	for (int i = 0; i < Average.size(); i++)
 	{
-		std::cout << "Mouldrisk: " << AverageOutside[i]->get_mouldBool() << std::endl;
-		std::cout << AverageOutside[i]->get_mouldRisk() << std::endl;
+		if (Average[i]->get_indoor() == true)
+		{
+			std::cout << " Indoor ";
+		}
+		else
+		{
+			std::cout << " Outdoor ";
+		}
+
+		std::cout << Average[i]->get_a_date() << std::endl;
+		std::cout << " Mouldrisk: " << Average[i]->get_mouldBool() << std::endl;
+		std::cout << " " << Average[i]->get_mouldRisk() << std::endl;
 		std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
 	}
-
-	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-	for (int i = 0; i < sizeVectorAverageIn; i++)
-	{
-		std::cout << "Mouldrisk: " << AverageInside[i]->get_mouldBool() << std::endl; 
-		std::cout << AverageInside[i]->get_mouldRisk() << std::endl;
-		std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
-	}
-
-
 }
 
