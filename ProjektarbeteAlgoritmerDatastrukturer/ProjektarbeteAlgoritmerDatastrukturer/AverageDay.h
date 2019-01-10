@@ -4,21 +4,21 @@ class AverageDay
 
 private:
 	std::string a_date;
-	double averageTemp, averageHumidity, mouldRisk;
+	float averageTemp, averageHumidity, mouldRisk;
 
 public:
 	AverageDay();
-	AverageDay(std::string a_date, double averageTemp, double averageHumidity)
+	AverageDay(std::string a_date, float averageTemp, float averageHumidity)
 		: a_date(a_date), averageTemp(averageTemp), averageHumidity(averageHumidity) {};
 
 
 	std::string get_a_date() { return this->a_date; }
 
-	double get_averageMoist() { return this->averageHumidity; }
-	double get_averageTemp() { return this->averageTemp; }
-	double get_mouldRisk() { return this->mouldRisk; }
+	float get_averageMoist() { return this->averageHumidity; }
+	float get_averageTemp() { return this->averageTemp; }
+	float get_mouldRisk() { return this->mouldRisk; }
 
-	void set_mouldRisk(double a) { mouldRisk = a; }
+	void set_mouldRisk(float a) { mouldRisk = a; }
 
 	~AverageDay(); 
 };

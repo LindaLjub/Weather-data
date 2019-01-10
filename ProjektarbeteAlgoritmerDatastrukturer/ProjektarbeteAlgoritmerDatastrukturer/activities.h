@@ -1,6 +1,8 @@
 #pragma once
 #include "theData.h"
 #include "AverageDay.h"
+#include "AverageAll.h"
+#include <vector>
 
 class activities
 {
@@ -12,6 +14,8 @@ private:
 	//pekarvectorer av typen "AverageDay".
 	std::vector<AverageDay *> AverageOutside;
 	std::vector<AverageDay *> AverageInside;
+
+	std::vector<AverageAll *> Average; // testar med bool
 
 	// variabler
 	std::string answer, searchDate;
@@ -36,10 +40,10 @@ public:
 	void mould();
 	void printMould();
 
-
 	// Nytt test
 	void testAverage();
 	void testCount(std::string, float &, float &, std::string);
+
 
 
 };

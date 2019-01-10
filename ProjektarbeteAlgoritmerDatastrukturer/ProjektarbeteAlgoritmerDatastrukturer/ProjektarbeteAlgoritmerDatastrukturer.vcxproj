@@ -23,7 +23,7 @@
     <ProjectGuid>{37b0ee99-b381-4622-a1ba-ea40d5788f52}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ProjektarbeteAlgoritmerDatastrukturer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -152,12 +152,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="activities.h" />
+    <ClInclude Include="AverageAll.h" />
     <ClInclude Include="AverageDay.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="theData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="activities.cpp" />
+    <ClCompile Include="AverageAll.cpp" />
     <ClCompile Include="AverageDay.cpp" />
     <ClCompile Include="ProjektarbeteAD.cpp" />
     <ClCompile Include="pch.cpp">

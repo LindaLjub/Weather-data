@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "activities.h"
-#include <stdlib.h>
+//#include <stdlib.h>
+#include <fstream>
+#include <string>
 
 // Konstruktor. Hämtar in all data till vektorerna EN gång! När programmet startar.
 activities::activities()
@@ -8,6 +10,7 @@ activities::activities()
 	indata();
 	testAverage();
 	mould();
+
 }
 
 // Deconstruktor, tar bort vectorerna när programmet stängs.
@@ -34,6 +37,7 @@ activities::~activities()
 		delete AverageOutside[i];
 	}
 }
+
 
 // Metod som hämtar in data från fil.
 void activities::indata()
@@ -229,10 +233,10 @@ double activities::searchDay(std::string date, std::string enviroment, std::stri
 		}
 	}
 
-
+	else
+		return 0;
 
 }
-
 
 void activities::testAverage()
 {
@@ -254,26 +258,28 @@ void activities::testAverage()
 			datum = inside[i + 1]->get_date();
 			testCount("In", changeTemp, changeHum, datum);
 			AverageInside.push_back(new AverageDay(datum, changeTemp, changeHum));
+
+			Average.push_back(new AverageAll(datum, changeTemp, changeHum, true)); // test test
 		}
 	}
 
 
 	//* medelvärden ute */
-	float changeTemp2, changeHum2;
-	std::string datum2;
+	/*float changeTemp2, changeHum2;*/
+	/*std::string datum2;*/
 
-	datum2 = outside[0]->get_date();
-	testCount("Out", changeTemp2, changeHum2, datum);
-	AverageOutside.push_back(new AverageDay(datum2, changeTemp2, changeHum2));
+	datum = outside[0]->get_date();
+	testCount("Out", changeTemp, changeHum, datum);
+	AverageOutside.push_back(new AverageDay(datum, changeTemp, changeHum));
 
 	for (int i = 0; i < sizeVectorOutside - 2; i++)
 	{
 		// Om de datum brevid varandra INTE är samma, ger unika datum. Varje datum endast EN gång.
 		if (outside[i]->get_date() != outside[i + 1]->get_date())
 		{
-			datum2 = outside[i]->get_date();
-			testCount("Out", changeTemp2, changeHum2, datum);
-			AverageOutside.push_back(new AverageDay(datum2, changeTemp2, changeHum2));
+			datum = outside[i]->get_date();
+			testCount("Out", changeTemp, changeHum, datum);
+			AverageOutside.push_back(new AverageDay(datum, changeTemp, changeHum));
 		}
 	}
 
@@ -283,7 +289,7 @@ void activities::testAverage()
 
 void activities::testCount(std::string en, float &temp, float &hum, std::string date)
 {
-	counter = 0, summa = 0, counter2 = 0, summa2 = 0;	// Nollställer räknare
+	//counter = 0, summa = 0, counter2 = 0, summa2 = 0;	// Nollställer räknare
 
 	if (en == "In")
 	{ 
@@ -330,6 +336,19 @@ void activities::testCount(std::string en, float &temp, float &hum, std::string 
 // Printar medeltemp alla dagar.
 void activities::printAverage(std::string enviroment)
 {
+	std::cout << " --- --- --- " << std::endl;
+	for (int i = 0; i < Average.size(); i++)
+	{
+
+		std::cout << Average[i]->get_a_date() << " AVERAGE \nAverage temp: "
+			<< Average[i]->get_averageTemp() << std::endl;
+
+		std::cout << "average !!! Average humidity: " << AverageInside[i]->get_averageMoist() << std::endl;
+		std::cout << " --- --- ---  " << std::endl;
+
+	}
+
+
 	if (enviroment == "In")
 	{
 		std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
@@ -438,7 +457,7 @@ void activities::metrologisk()
 void activities::mould()
 {
 
-	double fuktighet = 0, temp, mouldLine, mouldRisk;
+	float fuktighet = 0, temp, mouldLine, mouldRisk;
 
 	for (int i = 0; i < sizeVectorAverageOut; i++)
 	{
