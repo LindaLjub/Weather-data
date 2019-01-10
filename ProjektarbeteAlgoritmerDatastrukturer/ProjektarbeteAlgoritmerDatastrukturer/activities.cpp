@@ -38,7 +38,6 @@ activities::~activities()
 	}
 }
 
-
 // Metod som hämtar in data från fil.
 void activities::indata()
 {
@@ -238,6 +237,7 @@ double activities::searchDay(std::string date, std::string enviroment, std::stri
 
 }
 
+// hittar unika dagar.
 void activities::testAverage()
 {
 	/* medelvärden inne */
@@ -265,8 +265,6 @@ void activities::testAverage()
 
 
 	//* medelvärden ute */
-	/*float changeTemp2, changeHum2;*/
-	/*std::string datum2;*/
 
 	datum = outside[0]->get_date();
 	testCount("Out", changeTemp, changeHum, datum);
@@ -287,9 +285,11 @@ void activities::testAverage()
 	sizeVectorAverageOut = AverageOutside.size();
 }
 
+//Räknar ut medelvärde.
 void activities::testCount(std::string en, float &temp, float &hum, std::string date)
 {
-	//counter = 0, summa = 0, counter2 = 0, summa2 = 0;	// Nollställer räknare
+	int counter = 0, counter2 = 0;
+	float summa = 0, summa2 = 0;
 
 	if (en == "In")
 	{ 
@@ -409,6 +409,7 @@ void activities::metrologisk()
 	}
 
 	/*Datum för metrologisk vinter*/
+	int check = 0;
 
 	for (int x = 0; x < sizeVectorAverageOut - 4; x++) // så den inte jämför den sista med ingenting.
 	{
@@ -424,14 +425,22 @@ void activities::metrologisk()
 				AverageOutside[x + 4]->get_averageTemp() < 0)
 			{
 
-				std::cout << " Meteorological winter starts : " << AverageOutside[x]->get_a_date() << std::endl << std::endl;
-				x = sizeVectorAverageOut + 5;
+				std::cout << "1 Meteorological winter starts : " << AverageOutside[x]->get_a_date() << std::endl << std::endl;
+				x = sizeVectorAverageOut + 5; // stoppar loopen.
+				check = 1; // stoppar sökandet.
 
 			}
 		}
-		else
-			// Kollar sedan månaderna 1-9
-			if (AverageOutside[x]->get_a_date()[5] == 0)
+
+	}
+
+	if (check == 0) // bara om den inte hittade något i första sökningen.
+	{
+		for (int x = 0; x < sizeVectorAverageOut - 4; x++) // så den inte jämför den sista med ingenting.
+		{
+
+			// Kollar sedan månaderna 1-9. Och även övergången mellan december-januari.
+			if (AverageOutside[x]->get_a_date()[5] == '1' && AverageOutside[x]->get_a_date()[6] == '2' || AverageOutside[x]->get_a_date()[5] == '0')
 			{
 
 				if (AverageOutside[x]->get_averageTemp() < 0 &&
@@ -441,15 +450,14 @@ void activities::metrologisk()
 					AverageOutside[x + 4]->get_averageTemp() < 0)
 				{
 
-					std::cout << " Meteorological winter starts : " << AverageOutside[x]->get_a_date() << std::endl << std::endl;
+					std::cout << "2 Meteorological winter starts : " << AverageOutside[x]->get_a_date() << std::endl << std::endl;
 					x = sizeVectorAverageOut + 5;
 
 				}
 
 			}
-
+		}
 	}
-	
 
 }
 
@@ -476,6 +484,15 @@ void activities::mould()
 		mouldRisk = fuktighet - mouldLine;
 
 		AverageOutside[i]->set_mouldRisk(mouldRisk);
+
+		if (fuktighet > mouldLine)
+		{
+			AverageOutside[i]->set_mouldBool("high");
+		}
+		else
+		{
+			AverageOutside[i]->set_mouldBool("low");
+		}
 	
 	}
 
@@ -497,24 +514,36 @@ void activities::mould()
 
 		AverageInside[i]->set_mouldRisk(mouldRisk);
 
+		if (fuktighet > mouldLine)
+		{
+			AverageInside[i]->set_mouldBool("high");
+		}
+		else
+		{
+			AverageInside[i]->set_mouldBool("low");
+		}
+
 	}
 
 }
 
+// printar ut mögelrisk.
 void activities::printMould()
 {
 
 	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
 	for (int i = 0; i < sizeVectorAverageOut; i++)
 	{
-		std::cout << "Mouldrisk: " << AverageOutside[i]->get_mouldRisk() << std::endl;
+		std::cout << "Mouldrisk: " << AverageOutside[i]->get_mouldBool() << std::endl;
+		std::cout << AverageOutside[i]->get_mouldRisk() << std::endl;
 		std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
 	}
 
 	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
 	for (int i = 0; i < sizeVectorAverageIn; i++)
 	{
-		std::cout << "Mouldrisk: " << AverageInside[i]->get_mouldRisk() << std::endl;
+		std::cout << "Mouldrisk: " << AverageInside[i]->get_mouldBool() << std::endl; 
+		std::cout << AverageInside[i]->get_mouldRisk() << std::endl;
 		std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
 	}
 

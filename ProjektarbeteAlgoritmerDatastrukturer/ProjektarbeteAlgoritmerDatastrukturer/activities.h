@@ -19,30 +19,27 @@ private:
 
 	// variabler
 	std::string answer, searchDate;
-	float summa = 0, summa2 = 0;
-	int counter = 0, counter2 = 0;
 	int sizeVectorOutside, sizeVectorInside, sizeVectorAverageOut, sizeVectorAverageIn;
 
 public:
 	activities();
 	~activities();
 
-	// metoder till klassen.
 	void indata();			// Metod som hämtar in data från fil.
-
 	void menuOne();			// Huvudmenyn.
 	void menuInside();		// Undermeny inomhus
 	void menuOutside();		// Undermeny utomhus
+
 	void printAverage(std::string); // Printar medeltemp alla dagar.
-	double searchDay(std::string, std::string, std::string); // Hittar rätt day, returnerar medeltemp/medelfuktighet.
+	double searchDay(std::string, std::string, std::string); // Hittar rätt day, returnerar medeltemp.
+	void testAverage();	// hittar unika dagar.
+	void testCount(std::string, float &, float &, std::string); //Räknar ut medelvärde.
 
 	void metrologisk(); // Hittar dagen för metrologisk höst och vinter.
-	void mould();
-	void printMould();
+	void mould();		// Mögelrisk.
+	void printMould(); // printar ut mögelrisk.
 
-	// Nytt test
-	void testAverage();
-	void testCount(std::string, float &, float &, std::string);
+
 
 
 
