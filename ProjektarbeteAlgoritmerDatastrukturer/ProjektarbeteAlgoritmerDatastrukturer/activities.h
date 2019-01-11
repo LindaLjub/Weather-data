@@ -35,5 +35,9 @@ public:
 	void printMould(); // printar ut mögelrisk.
 
 
+	void testSort();
+	void mergeSort(AverageAll* [], int, int);
+	void merge(float *, int, int);
+
 };
 

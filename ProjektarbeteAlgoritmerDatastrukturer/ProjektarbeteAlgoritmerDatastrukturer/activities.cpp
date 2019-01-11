@@ -9,7 +9,7 @@ activities::activities()
 	indata();
 	average();
 	mould();
-
+	testSort(); // testar.
 }
 
 // Deconstruktor, tar bort vectorerna när programmet stängs.
@@ -449,6 +449,7 @@ void activities::mould()
 // printar ut mögelrisk.
 void activities::printMould()
 {
+
 	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
 	for (int i = 0; i < Average.size(); i++)
 	{
@@ -468,3 +469,110 @@ void activities::printMould()
 	}
 }
 
+void activities::testSort()
+{
+	int a = Average.size();
+	float array[100];
+
+	for (int i = 0; i < 10; i++)
+	{
+		array[i] = Average[i]->get_mouldRisk();
+
+	}
+
+
+	std::cout << " Innan: ";
+	for (int i = 0; i < 10; i++)
+	{
+		std::cout << " " << array[i];
+
+	}
+
+	//mergeSort(array, 0, 9);
+
+	//mergeSort(*Average[], 0, 9);
+
+	std::cout << "\n Efter: ";
+	for (int i = 0; i < 10; i++)
+	{
+		std::cout << " " << array[i];
+
+	}
+
+
+
+}
+
+void activities::merge(float * array, int start, int end)
+{
+
+	int middle = (start + end) / 2; // hittar en ny mitten.
+
+	int i = start;
+	int j = middle + 1;
+	int k = start;
+
+	float temporary[14]; // används som behållare för arrayens element.
+
+	// jämföra elementen.
+	while (i <= middle && j <= end) // Sålänge som första elementet är mindre än sista elementet i del 1 och samma sak i del 2.
+	{
+		if (array[i] < array[j]) // om elemnent 1 del 1 är mindre än element 1 del 2.
+		{
+			temporary[k] = array[i]; // behållarens plats 1 = element 1 del 1.
+			k++;
+			i++;
+		}
+		else
+		{
+			temporary[k] = array[j]; //  behållarens plats 1 = element 1 del 2.
+			k++;
+			j++;
+		}
+	}
+
+	// Fattar ej dessa 2..
+
+	while (i <= middle) // sålänge som i är mindre eller lika med mitten.
+	{
+		temporary[k] = array[i]; // starten på behållaren = element 1 del 2.
+		k++;
+		i++;
+	}
+
+	while (j <= end)
+	{
+		temporary[k] = array[j];
+		k++;
+		j++;
+	}
+
+	// Kopiera alla element från behållaren till den riktiga arrayen.
+	for (int i = start; i <= end; i++)
+	{
+		array[i] = temporary[i];
+	}
+}
+
+void activities::mergeSort(AverageAll * array[], int start, int end)
+{
+
+	// om det är 0 eller 1 element behövs det inte sorteras.
+	if (start >= end)
+	{
+		return;
+	}
+
+	// 3 steg.
+
+	// steg 1. Dela
+	int middle = (start + end) / 2;
+
+	// Steg 2. sortera de 2 delarna. del 1 - start till mitten. del 2 - mitten + 1 till slutet.
+	mergeSort(array, start, middle); // del 1
+	mergeSort(array, middle + 1, end); // del 2
+
+	// steg 3. Merge dom två delarna.
+	merge(array, start, end); // sortera arrayen från start till slut.
+
+}
