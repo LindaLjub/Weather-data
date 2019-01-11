@@ -36,7 +36,7 @@ public:
 
 
 	void testSort();
-	void mergeSort(AverageAll* [], int, int);
+	void mergeSort(float [], int, int);
 	void merge(float *, int, int);
 
 };

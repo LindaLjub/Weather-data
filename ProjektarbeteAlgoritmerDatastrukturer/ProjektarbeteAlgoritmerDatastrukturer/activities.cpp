@@ -9,7 +9,6 @@ activities::activities()
 	indata();
 	average();
 	mould();
-	testSort(); // testar.
 }
 
 // Deconstruktor, tar bort vectorerna när programmet stängs.
@@ -84,7 +83,7 @@ void activities::menuOne()
 
 	bool goMenu = false;
 	do {
-	std::cout << " MAIN MENU\n [1] Indoor data\n [2] Outdoor data\n [3] Exit" << std::endl;
+	std::cout << " MAIN MENU\n [1] Indoor data\n [2] Outdoor data\n [3] Exit \n [4] highest mouldrisk - test" << std::endl;
 	std::cin >> answer;
 	answer = toupper(answer[0]);
 
@@ -100,6 +99,9 @@ void activities::menuOne()
 			break;
 		case '3':
 			goMenu = true;
+			break;
+		case '4':
+			testSort();
 			break;
 		default:
 			break;
@@ -471,34 +473,53 @@ void activities::printMould()
 
 void activities::testSort()
 {
-	int a = Average.size();
-	float array[100];
+	float array[260];
+	int count = 0;
 
-	for (int i = 0; i < 10; i++)
+	// array får alla värden i Average.
+	for (int i = 0; i < Average.size(); i++)
 	{
 		array[i] = Average[i]->get_mouldRisk();
-
+		count++;
 	}
 
 
-	std::cout << " Innan: ";
-	for (int i = 0; i < 10; i++)
+	// sortera
+	mergeSort(array, 0, 260 - 1);
+
+
+	// Hitta datum
+
+	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
+	std::cout << " Highest mouldrisk: " << std::endl;
+	std::cout << " --- --- --- --- --- --- --- --- --- --- " << std::endl;
+
+	for (int x = 259;  x > 254; x--) // Hittar topp 5
 	{
-		std::cout << " " << array[i];
 
+		for (int i = 0; i < Average.size(); i++) // loppar hela arrayen.
+		{
+
+			if (array[x] == Average[i]->get_mouldRisk())
+			{
+				std::cout << " #" << Average[i]->get_a_date();
+
+				if (Average[i]->get_indoor() == true)
+				{
+					std::cout << " indoor " << std::endl;
+				}
+				else
+				{
+					std::cout << " outdoor " << std::endl;
+				}
+			}
+		}
 	}
 
-	//mergeSort(array, 0, 9);
-
-	//mergeSort(*Average[], 0, 9);
-
-	std::cout << "\n Efter: ";
-	for (int i = 0; i < 10; i++)
-	{
-		std::cout << " " << array[i];
-
-	}
-
+	std::cout << "\n";
+		
+		
+	
 
 
 }
@@ -512,7 +533,7 @@ void activities::merge(float * array, int start, int end)
 	int j = middle + 1;
 	int k = start;
 
-	float temporary[14]; // används som behållare för arrayens element.
+	float temporary[260];// används som behållare för arrayens element. // Lika stor, 260 som Average vectorn.
 
 	// jämföra elementen.
 	while (i <= middle && j <= end) // Sålänge som första elementet är mindre än sista elementet i del 1 och samma sak i del 2.
@@ -552,9 +573,10 @@ void activities::merge(float * array, int start, int end)
 	{
 		array[i] = temporary[i];
 	}
+
 }
 
-void activities::mergeSort(AverageAll * array[], int start, int end)
+void activities::mergeSort(float array[], int start, int end)
 {
 
 	// om det är 0 eller 1 element behövs det inte sorteras.
