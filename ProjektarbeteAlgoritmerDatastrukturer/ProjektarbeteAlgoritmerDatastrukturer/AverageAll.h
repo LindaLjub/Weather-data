@@ -2,11 +2,9 @@
 class AverageAll
 {
 
-
-
 private:
 	std::string a_date, mouldYes;
-	float averageTemp, averageHumidity, mouldRisk;
+	float averageTemp, averageHumidity, mouldRisk, tempDiff;
 	bool indoor;
 
 public:
@@ -17,13 +15,16 @@ public:
 	// getters
 	std::string get_a_date() { return this->a_date; }
 	bool get_indoor() { return this->indoor;  }
-	float get_averageMoist() { return this->averageHumidity; }
-	float get_averageTemp() { return this->averageTemp; }
-	float get_mouldRisk() { return this-> mouldRisk; }
+	float get_averageMoist() const { return this->averageHumidity; }
+	float get_averageTemp() const { return this->averageTemp; } 
+
+	float get_mouldRisk() const { return this-> mouldRisk; }
 	std::string get_mouldBool() { return this-> mouldYes; }
+	float get_diff() { return this->tempDiff; }
 
 	// setters
 	void set_mouldRisk(float a) { mouldRisk = a; }
+	void set_tempDiff(float a) { tempDiff = a; }
 	void set_mouldBool(std::string a) { mouldYes = a; }
 
 	~AverageAll();

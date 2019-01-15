@@ -3,6 +3,7 @@
 #include "AverageDay.h"
 #include "AverageAll.h"
 #include <vector>
+#include <algorithm>
 
 class activities
 {
@@ -16,6 +17,9 @@ private:
 
 	// variabler
 	std::string answer, searchDate;
+	std::string metro = " Not found..";
+	std::string metroW = " Not found..";
+
 	int sizeVectorOutside, sizeVectorInside, checkDate = 0;
 
 public:
@@ -32,12 +36,15 @@ public:
 	void searchDay(std::string, std::string); // Hittar rätt day, returnerar medeltemp.
 	void metrologisk(); // Hittar dagen för metrologisk höst och vinter.
 	void mould();		// Mögelrisk.
-	void printMould(); // printar ut mögelrisk.
+	void printMould(std::string); // printar ut mögelrisk.
 
 
-	void testSort();
+
+	
 	void mergeSort(float [], int, int);
 	void merge(float *, int, int);
+
+	void diff();
 
 };
 
