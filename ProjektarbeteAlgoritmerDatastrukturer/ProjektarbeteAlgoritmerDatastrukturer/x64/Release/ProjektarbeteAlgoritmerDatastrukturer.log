@@ -1,19 +1,8 @@
-﻿  pch.cpp
-  activities.cpp
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(77): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(78): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(365): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(404): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(453): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(473): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(494): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(516): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(549): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(588): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  AverageAll.cpp
+﻿  AverageAll.cpp
+c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\averageall.cpp(1): fatal error C1853: 'x64\Release\ProjektarbeteAlgoritmerDatastrukturer.pch' precompiled header file is from a previous version of the compiler, or the precompiled header is C++ and you are using it from C (or vice versa)
   ProjektarbeteAD.cpp
+c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\projektarbetead.cpp(2): fatal error C1853: 'x64\Release\ProjektarbeteAlgoritmerDatastrukturer.pch' precompiled header file is from a previous version of the compiler, or the precompiled header is C++ and you are using it from C (or vice versa)
+  activities.cpp
+c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(1): fatal error C1853: 'x64\Release\ProjektarbeteAlgoritmerDatastrukturer.pch' precompiled header file is from a previous version of the compiler, or the precompiled header is C++ and you are using it from C (or vice versa)
   theData.cpp
-  Generating code
-  All 437 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  ProjektarbeteAlgoritmerDatastrukturer.vcxproj -> C:\Users\Linda\source\repos\weather-data\ProjektarbeteAlgoritmerDatastrukturer\x64\Release\ProjektarbeteAlgoritmerDatastrukturer.exe
+c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\thedata.cpp(1): fatal error C1853: 'x64\Release\ProjektarbeteAlgoritmerDatastrukturer.pch' precompiled header file is from a previous version of the compiler, or the precompiled header is C++ and you are using it from C (or vice versa)

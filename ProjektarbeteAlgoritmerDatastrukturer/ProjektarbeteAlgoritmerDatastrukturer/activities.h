@@ -15,6 +15,8 @@ private:
 	// vector till alla medelvärden
 	std::vector<AverageAll *> Average; 
 
+	std::vector<theData *> door;
+
 	// variabler
 	std::string answer, searchDate;
 	std::string metro = " Not found..";
@@ -45,6 +47,8 @@ public:
 	void merge(float *, int, int);
 
 	void diff();
+	void doorOpen();
+	void printDoor();
 
 };
 
