@@ -15,7 +15,8 @@ private:
 	// vector till alla medelvärden
 	std::vector<AverageAll *> Average; 
 
-	std::vector<theData *> door;
+	std::vector<theData *> doorIn;
+	std::vector<theData *> doorOut;
 
 	// variabler
 	std::string answer, searchDate;
@@ -41,8 +42,6 @@ public:
 	void printMould(std::string); // printar ut mögelrisk.
 
 
-
-	
 	void mergeSort(float [], int, int);
 	void merge(float *, int, int);
 
