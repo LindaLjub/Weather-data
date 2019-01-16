@@ -11,9 +11,10 @@ private:
 public:
 	// konstrktor, en utan indata och en med. konstruktorn initierar variablerna.
 	theData() {};
-	theData(std::string date, std::string time, float temp, float(moist),std::string place) : date(date), time(time), temp(temp), moist(moist), place(place) {};
 	theData(std::string date, std::string time, std::string place, float temp, float moist)
 		: date(date), time(time), place(place), temp(temp), moist(moist) {};
+
+	theData(std::string date, float temp, std::string time) : date(date), temp(temp), time(time) {};
 
 	// getters
 	std::string get_date() { return this->date; }

@@ -286,6 +286,11 @@ void activities::average()
 	float summa2 = inside[0]->get_moist(); // summan av fuktighet.
 	int testdoor = 0; // till balkongdörr, ser till att endast 1 dag hämtas in.
 
+	float summaDoor = inside[0]->get_temp();
+	int countDoor = 1;
+
+	std::string timmeT;
+
 	for (int i = 0; i < sizeVectorInside - 2 ; i++) // kollar hela vectorn.
 	{
 		// om datumen brevid varandra är samma.
@@ -299,29 +304,37 @@ void activities::average()
 			counter++;
 			test1++;
 
-			if (testdoor < 1) 
+
+			// test test
+			if (inside[i]->get_time().substr(0, 2) == inside[i + 1]->get_time().substr(0, 2)) // om det är samma timme.
 			{
-				// skickar in alla tider/temperaturer från EN DAG i en vektor.
+				//std::cout << " borde plussa ";
+				summaDoor = summaDoor + inside[i + 1]->get_temp(); // plussar på alla med samma timme.
+				countDoor++;
+				
+			}
+			else
+			{
+				timmeT = inside[i]->get_time().substr(0, 2); // hämtar ut vilken timme det är.
 				datum = inside[i]->get_date();
-				tid = inside[i]->get_time();
-				doorIn.push_back(new theData(datum, tid, inside[i]->get_temp(), inside[i]->get_moist(), "Inne"));
+				doorIn.push_back(new theData(datum, (summaDoor/countDoor), timmeT));
+
+				summaDoor = inside[i + 1]->get_temp();
+				countDoor = 1;
 			}
 		}
 
 		else 
 		{
+			// Skickar in i door vectorn
+			datum = inside[i]->get_date();
+			timmeT = inside[i]->get_time().substr(0, 2); // hämtar ut vilken timme det är.
+			doorIn.push_back(new theData(datum, (summaDoor / countDoor), timmeT));
+
+			// skickar in medelvärdena i vektorn.
 			datum = inside[i]->get_date();
 			Average.push_back(new AverageAll(datum, (summa / counter), (summa2 / counter), true)); 
 
-			// till balkongdörr
-			if (testdoor < 1) 
-			{
-				// skickar in alla tider/temperaturer från EN DAG i en vektor.
-				tid = inside[i]->get_time();
-				doorIn.push_back(new theData(datum, tid, inside[i]->get_temp(), inside[i]->get_moist(), "Inne"));
-			}
-
-			testdoor++; // till door
 
 			// nollställer alla värden
 			summa = 0, summa2 = 0; 
@@ -329,14 +342,16 @@ void activities::average()
 			summa2 = inside[i + 1]->get_moist();
 			counter = 1;
 			test1++;
-
-
 		}
 	}
+
 
 	// skickar in sista dagen.
 	datum = inside[test1]->get_date();
 	Average.push_back(new AverageAll(datum, (summa / counter), (summa2 / counter), true)); 
+
+	timmeT = inside[test1]->get_time().substr(0, 2); // hämtar ut vilken timme det är.
+	doorIn.push_back(new theData(datum, (summaDoor / countDoor), timmeT));
 
 
 	/* medelvärden ute */
@@ -344,6 +359,9 @@ void activities::average()
 	counter = 1;
 	summa = outside[0]->get_temp();
 	summa2 = outside[0]->get_moist();
+
+	summaDoor = outside[0]->get_temp();
+	countDoor = 1;
 
 	testdoor = 0; // till balkongdörr
 
@@ -360,29 +378,35 @@ void activities::average()
 			counter++;
 			test++;
 
-			// till door
-			if (testdoor < 1) 
+			// test test
+			if (outside[i]->get_time().substr(0, 2) == outside[i + 1]->get_time().substr(0, 2)) // om det är samma timme.
 			{
-				// skickar in alla tider/temperaturer från EN DAG i en vektor.
+				//std::cout << " borde plussa ";
+				summaDoor = summaDoor + outside[i + 1]->get_temp(); // plussar på alla med samma timme.
+				countDoor++;
+
+			}
+			else
+			{
+				timmeT = outside[i]->get_time().substr(0, 2); // hämtar ut vilken timme det är.
 				datum = outside[i]->get_date();
-				tid = outside[i]->get_time();
-				doorOut.push_back(new theData(datum, tid, outside[i]->get_temp(), outside[i]->get_moist(), "Ute"));
+				doorOut.push_back(new theData(datum, (summaDoor / countDoor), timmeT));
+
+				summaDoor = outside[i + 1]->get_temp();
+				countDoor = 1;
 			}
 		}
 
 		else
 		{
+			// test tes
+			datum = outside[i]->get_date();
+			timmeT = outside[i]->get_time().substr(0, 2); // hämtar ut vilken timme det är.
+			doorOut.push_back(new theData(datum, (summaDoor / countDoor), timmeT));
+
 			// skickar in medelvärdena i vektorn.
 			datum = outside[i]->get_date();
 			Average.push_back(new AverageAll(datum, (summa / counter), (summa2 / counter), false)); 
-
-			// till door
-			if (testdoor < 1) // vector som jämför dagar.
-			{
-				tid = outside[i]->get_time();
-				doorOut.push_back(new theData(datum, tid, outside[i]->get_temp(), outside[i]->get_moist(), "Ute"));
-			}
-			testdoor++; // till door
 
 			// nollställer alla värden
 			summa = 0, summa2 = 0;
@@ -396,6 +420,9 @@ void activities::average()
 	// Sista dagen
 	datum = outside[test]->get_date();
 	Average.push_back(new AverageAll(datum, (summa / counter), (summa2 / counter), false));
+
+	timmeT = outside[test]->get_time().substr(0, 2); // hämtar ut vilken timme det är.
+	doorOut.push_back(new theData(datum, (summaDoor / countDoor), timmeT));
 }
 
 // Printar medeltemp alla dagar.
@@ -794,35 +821,54 @@ void activities::printdiff()
 // kollar om balkongdörren är öppen
 void activities::doorOpen() {
 
-	float diffTemp, diffHum;
+	float diffTemp = 0, diffHum = 0;
+
+	
 
 	for (int x = 0; x < doorIn.size(); x++) // kollar alla innevärden.
 	{
 		for (int i = 0; i < doorOut.size(); i++) // Tar alla innevärden
 		{
-				if (doorIn[x]->get_time()[0] == doorOut[i]->get_time()[0] && doorIn[x]->get_time()[1] == doorOut[i]->get_time()[1]) // om det är samma timme
+				
+				if (doorIn[x]->get_time() == doorOut[i]->get_time()) // om det är samma timme
 				{
 
 					// jämför temp och fuktighet
-					diffTemp = doorIn[x]->get_temp() - doorOut[i]->get_temp();
-					diffHum = doorIn[x]->get_moist() - doorOut[i]->get_moist();
 
-					if (diffTemp < -3 || diffTemp > 3) // om diff är väldigt hög/väldigt låg, dörren är inte öppen.
+					diffTemp = doorIn[x]->get_temp() - doorOut[i]->get_temp();
+
+				/*	std::cout << " temp inne " << doorIn[x]->get_temp() << " temp ute " << doorOut[i]->get_temp();
+					std::cout << " diff " << diffTemp << " ";*/
+
+					/*diffHum = doorIn[x]->get_moist() - doorOut[i]->get_moist();*/
+
+					//if (diffTemp < -3 || diffTemp > 3) // om diff är väldigt hög/väldigt låg, dörren är inte öppen.
+					//{
+					//	doorIn[x]->set_doorClosed(true);
+					//}
+					//std::cout << " diff " << diffTemp << " ";
+
+					if (diffTemp < 4.0) // om diff är väldigt hög/väldigt låg, dörren är inte öppen.
 					{
 						doorIn[x]->set_doorClosed(true);
 					}
-
-					else // Om det är liten diff mellan temp, kolla fuktighet.
+					else if (diffTemp > 4.0)
 					{
-						if (diffHum < 3 || diffHum > 3) // mycket diff, inte öppet.
-						{
-							doorIn[x]->set_doorClosed(true);
-						}
-						else // lite diff, dörren är öppen.
-						{
-							doorIn[x]->set_doorClosed(false);
-						}
+						doorIn[x]->set_doorClosed(false);
 					}
+
+
+					//else if (diffTemp > -3 || diffTemp < 3) // Om det är liten diff mellan temp, kolla fuktighet.
+					//{
+					//	//if (diffHum < 3 || diffHum > 3) // mycket diff, inte öppet.
+					//	//{
+					//	//	doorIn[x]->set_doorClosed(true);
+					//	//}
+					//	//else // lite diff, dörren är öppen.
+					//	//{
+					
+						/*}*/
+					/*}*/
 				}	
 		}
 	}
@@ -831,62 +877,56 @@ void activities::doorOpen() {
 // visar om balkongdörren är öppen
 void activities::printDoor()
 {
-	int countTime = 0;
-	int x = 0;
+	////int c = 0;
+	//for (int i = 0; i < doorIn.size(); i++)
+	//{
+	//	if (doorIn[i]->get_doorClosed() == false) // om dörren är öppen
+	//	{
+	////		if (c == 0)
+	////		{
+	//			std::cout << " open from: " << doorIn[i]->get_date() << " " << doorIn[i]->get_time() << std::endl;
+	////		}
+	////			
+	////		c = 1;
+	//	}
+	//	else
+	//	{
+	////		if (c == 1)
+	////		{
+	////			std::cout << " open to: " << doorIn[i + 1]->get_date() << " " << doorIn[i + 1]->get_time() << std::endl;
+	//		/*}*/
+
+	////		c = 0;
+	//	}
+	//}
+
+	int d = 0;
+	int g = 0;
+
+	std::cout << " Indoor" << std::endl;
 
 	for (int i = 0; i < doorIn.size(); i++)
+	{	
+		std::cout << doorIn[i]->get_date() << " " << doorIn[i]->get_time() << " " << doorIn[i]->get_temp() << std::endl;
+	if (doorIn[i]->get_doorClosed() == false)
 	{
-		countTime = 0;
-		x = 0;
-
-		if (doorIn[i]->get_doorClosed() == false) // om dörren är öppen
-		{
-			std::cout << " open from: " << doorIn[i]->get_date() << " " << doorIn[i]->get_time() << std::endl;
-			countTime = 1;
-			x = i + 1; // nästa temp efter i.
-
-				if (doorIn[x]->get_doorClosed() == false) // så länge som nästa timme är öppen
-				{
-					x++;
-					countTime++;
-					std::cout << " still open: " << doorIn[x]->get_date() << " " << doorIn[x]->get_time() << std::endl;
-				}
-				else
-				{
-					std::cout << " open to: " << doorIn[x]->get_date() << " " << doorIn[x]->get_time() << std::endl;
-					i = x; // den kollar inte samma igen.	
-				}
-
-			//i = i + countTime; // den kollar inte samma igen.	
-			
-		}
+		std::cout << " open " << std::endl;
+	}
+	else if (doorIn[i]->get_doorClosed() == true)
+	{
+		std::cout << " closed " << std::endl;
+	}
+	
+		
 	}
 
-	//int d = 0;
-	//int g = 0;
-
-	//for (int i = 0; i < doorIn.size(); i++)
-	//{	
-	//	std::cout << doorIn[i]->get_date() << " " << doorIn[i]->get_time() << " " << doorIn[i]->get_place() << std::endl;
-	//		
-	//	if (doorIn[i]->get_doorClosed() == false)
-	//	{
-	//		std::cout << " open" << std::endl;
-	//	}
-	//	else if (doorIn[i]->get_doorClosed() == true)
-	//	{
-	//		std::cout << " closed" << std::endl;
-	//	}
-	//		
-	//	d++;
-	//}
+	//std::cout << " Outdoor" << std::endl;
 
 	//for (int i = 0; i < doorOut.size(); i++)
 	//{
-	//	std::cout << doorOut[i]->get_date() << " " << doorOut[i]->get_time() << " " << doorOut[i]->get_temp() << " " << doorOut[i]->get_place() << std::endl;
-	//	g++;
+	//	std::cout << doorOut[i]->get_date() << " " << doorOut[i]->get_time() << " " << doorOut[i]->get_temp() << std::endl;
 	//}
-	//std::cout << " size in: " << d;
-	//std::cout << " size out: " << g;
+
+
 }
 
