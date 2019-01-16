@@ -49,6 +49,7 @@ public:
 	void diff();
 	void doorOpen();
 	void printDoor();
+	void printdiff();
 
 };
 

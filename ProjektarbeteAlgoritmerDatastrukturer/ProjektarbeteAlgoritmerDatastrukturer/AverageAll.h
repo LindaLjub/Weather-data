@@ -20,7 +20,7 @@ public:
 
 	float get_mouldRisk() const { return this-> mouldRisk; }
 	std::string get_mouldBool() { return this-> mouldYes; }
-	float get_diff() { return this->tempDiff; }
+	float get_diff() const { return this->tempDiff; }
 
 	// setters
 	void set_mouldRisk(float a) { mouldRisk = a; }

@@ -12,6 +12,7 @@ activities::activities()
 	mould();	// räknar ut mögelrisk
 	metrologisk(); // räknar ut metrologisk höst/vinter
 	//doorOpen();
+	diff();
 }
 
 // Deconstruktor, tar bort vectorerna när programmet stängs.
@@ -99,6 +100,13 @@ bool sortMould(const AverageAll *a, const AverageAll *b)
 	return a->get_mouldRisk() < b->get_mouldRisk();
 };
 
+// sortera efter störst risk
+bool sortRisk(const AverageAll *a, const AverageAll *b)
+{
+	return a->get_diff() < b->get_diff();
+
+};
+
 
 // Huvudmenyn.
 void activities::menuOne()
@@ -120,7 +128,8 @@ void activities::menuOne()
 			goMenu = true;
 			break;
 		case '4':
-			diff();
+			std::stable_sort(Average.begin(), Average.end(), sortRisk); // Sorterar medeltemp
+			printdiff();
 			break;
 		case '5':
 			printDoor();
@@ -737,7 +746,7 @@ void activities::mergeSort(float array[], int start, int end)
 // räknar ut diffen, setter diff.
 void activities::diff()
 {
-	// Sortering på då inne - och yttertemperaturen skiljt sig mest och minst.
+	// Sortering på då inne - och ytterMEDELtemperaturen skiljt sig mest och minst.
 	int x = 0, i = 1;
 	float dummy = 0;
 
@@ -751,6 +760,7 @@ void activities::diff()
 			{
 				dummy = Average[x]->get_averageTemp() - Average[i]->get_averageTemp();
 				Average[x]->set_tempDiff(dummy);
+				Average[i]->set_tempDiff(dummy);
 			}
 			i++;
 		}
@@ -758,12 +768,6 @@ void activities::diff()
 		i = x + 1;
 	}
 
-	std::cout << " Diff: ";
-	for (int i = 0; i < 10; i++)
-	{
-
-		std::cout << " " << Average[i]->get_diff() << " " << Average[i]->get_a_date();
-	}
 
 }
 
@@ -858,4 +862,31 @@ void activities::printDoor()
 	//		
 		std::cout << door[i]->get_date() << " " << door[i]->get_time() << " " << door[i]->get_temp() << " " << door[i]->get_place() << std::endl;
 	}
+}
+
+// printar ut högsta/lägsta diff 
+void activities::printdiff()
+{
+	std::cout << " --- --- --- --- --- --- --- --- --- --- --- --- --- --" << std::endl;
+	std::cout << " Higest differens between average temp indoor/outdoor: " << std::endl;
+	std::cout << " --- --- --- --- --- --- --- --- --- --- --- --- --- --" << std::endl;
+
+	for (int i = Average.size() - 1; i > Average.size() - 11; i--)
+	{
+		std::cout << " " << Average[i]->get_a_date() << " || "<< Average[i]->get_diff() << " "  << std::endl;
+		i--;
+	}
+
+	std::cout << " --- --- --- --- --- --- --- --- --- --- --- --- --- --" << std::endl;
+	std::cout << " Lowest differens between average temp indoor/outdoor: " << std::endl;
+	std::cout << " --- --- --- --- --- --- --- --- --- --- --- --- --- --" << std::endl;
+
+	for (int i = 0; i < 10; i++)
+	{
+		std::cout << " " << Average[i]->get_a_date() << " || " << Average[i]->get_diff() << " "  << std::endl;
+		i++;
+	}
+
+	std::cout << "\n";
+
 }

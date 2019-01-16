@@ -19,6 +19,7 @@ public:
 	std::string get_date() { return this->date; }
 	std::string get_time() { return this->time; }
 	std::string get_place() { return this->place; }
+
 	float get_temp() { return this->temp; }
 	float get_moist() { return this->moist; }
 	bool get_doorClosed() { return this->doorClosed; }
