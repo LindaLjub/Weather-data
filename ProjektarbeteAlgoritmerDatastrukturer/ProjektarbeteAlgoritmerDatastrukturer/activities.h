@@ -23,6 +23,8 @@ private:
 	std::vector<theData *> open;
 
 	// variabler
+	float IndoorAverageTemp;
+
 	std::string answer, searchDate;
 	std::string metro = " Not found..";
 	std::string metroW = " Not found..";
@@ -52,6 +54,7 @@ public:
 	void hoursOpen();
 	void printDoor();
 
+	void averageIndoorTemp();
 
 };
 

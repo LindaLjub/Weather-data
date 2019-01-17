@@ -12,6 +12,7 @@ activities::activities()
 	average(); // räknar ut alla medelvärden
 	mould();	// räknar ut mögelrisk
 	metrologisk(); // räknar ut metrologisk höst/vinter
+	averageIndoorTemp();
 	doorOpen(); // balkongdörren är öppen eller ej varje timme.
 	hoursOpen(); // räknar ut hur länge det var öppet.
 	diff(); // räknar ut hur mycket diff det är mellan dagar inne/ute.
@@ -779,45 +780,39 @@ void activities::printdiff()
 // kollar om balkongdörren är öppen eller ej varje timme.
 void activities::doorOpen() {
 
-	float diffTempez = 0, diffHum = 0;
-	int x = 0;
+	double diffTemp = 0, diffHum = 0, check;
 
-	for (int x = 0; x < doorIn.size(); x++) // kollar alla innevärden.
+	for (int x = 0; x < doorIn.size(); x++) // kollar hela ute vektorn.
 	{
+		// TILL ALGORITHM NR 2
+		check = IndoorAverageTemp - doorIn[0]->get_temp();
+
+		// om skiljer sig från det den brukar vara.
+		if (check > 2 && check < -2)
+		{
+			doorIn[x]->set_OpenNr2(true);
+		}
+
 		for (int i = 0; i < doorOut.size(); i++) // Tar alla innevärden
 		{
-
 			if (doorIn[x]->get_time() == doorOut[i]->get_time()) // om det är samma timme
 			{
-
 				// jämför temp och fuktighet
 
-				diffTempez = doorIn[x]->get_temp() - doorOut[i]->get_temp();
 				diffHum = doorIn[x]->get_moist() - doorOut[i]->get_moist();
-
-
-				// Om det är liten diff mellan temp, kolla fuktighet.
-				if (diffTempez < 4 && diffTempez > (-4) ) 
+				diffTemp = doorIn[x]->get_temp() - doorOut[i]->get_temp();
+	
+				// Om det är liten diff mellan temp,
+				if(diffTemp < 2 && diffTemp > -2)
 				{
-						if (diffHum < 4 && diffHum > (-4)) // lite diff, öppet
-						{
-							doorIn[x]->set_doorClosed(false);
-						}
-						else // mycket diff, dörren är inte öppen.
-						{
-							doorIn[x]->set_doorClosed(true);
-						}
+					// om det är liten diff fuktighet.
+					if (diffHum < 2 && diffHum > -2)
+					{
+						// det är öppet
+						doorIn[x]->set_doorClosed("A");
+					}
 				}
-
-				// om diff är väldigt hög/väldigt låg, dörren är inte öppen.
-				else 
-				{
-					doorIn[x]->set_doorClosed(true);
-				}
-
-				x++; // gå vidare.
 			}
-
 		}
 	}
 }
@@ -826,13 +821,11 @@ void activities::doorOpen() {
 void activities::hoursOpen()
 {
 	std::string openedDate, openedTime, closedDate, closedTime;
-	int countTime = 0;
-	bool check;
+	int countTime = 0, count2 = 0;
 	
 	for (int i = 0; i < doorIn.size(); i++)
 	{
-
-		if (doorIn[i]->get_doorClosed() == false) // om dörren är öppen
+		if (doorIn[i]->get_doorClosed() == "A") // om dörren är öppen
 		{
 			countTime++;
 
@@ -840,23 +833,22 @@ void activities::hoursOpen()
 			openedDate = doorIn[i]->get_date();
 			openedTime = doorIn[i]->get_time();
 
-			while (doorIn[i + 1]->get_doorClosed() == false) // så länge som dörren är öppen.
+			while (doorIn[i + 1]->get_doorClosed() == "A") // så länge som dörren är öppen.
 			{
 				countTime++;
 				i++;
 			}
-	
 		}
 		else
 		{
 			if (countTime != 0)
 			{
-				// när den stängdes.
+				//// när den stängdes.
 				closedDate = doorIn[i]->get_date();
 				closedTime = doorIn[i]->get_time();
 
 				// datum, tid, datum, tid, antal timmar.
-				open.push_back(new theData(openedDate, openedTime, countTime));
+				open.push_back(new theData(openedDate, openedTime, countTime, closedDate, closedTime));
 
 			}
 		
@@ -864,21 +856,50 @@ void activities::hoursOpen()
 		}
 
 	}
-
 }
 
+// printar ut när dörren har varit öppen
 void activities::printDoor()
 {
 	std::cout << " --- --- --- --- --- --- --- --- --- -- -- " << std::endl;
+	std::cout << " ALGORITHM ONE SAID" << std::endl;
 	std::cout << " The balcony door was opened the most at: " << std::endl;
 	std::cout << " --- --- --- --- --- --- --- --- --- -- -- " << std::endl;
 
 	for (int i = open.size()-1; i > open.size() - 6; i--)
 	{
 		std::cout << " door opened at: " << open[i]->get_date() << " " << open[i]->get_time() << ":00 ";
-		std::cout << " hours open: " << open[i]->get_hoursOpened() << std::endl;
+		std::cout << " hours open: " << open[i]->get_hoursOpened();
+		std::cout << " door closed at: " << open[i]->get_ClosedDate() << " " << open[i]->get_ClosedTime()<< ":00 " << std::endl;
 	}
 
 	std::cout << "\n";
+
+	std::cout << " --- --- --- --- --- --- --- --- --- -- -- " << std::endl;
+	std::cout << " ALGORITHM TWO SAID" << std::endl;
+	std::cout << " The balcony door was opened the most at: " << std::endl;
+	std::cout << " --- --- --- --- --- --- --- --- --- -- -- " << std::endl;
+
+	std::cout << "\n";
+}
+
+// räknar ut vad temperaturen vanligtvis är inne.
+void activities::averageIndoorTemp()
+{
+	float summa = 0;
+	int count = 0;
+
+	for (int i = 0; i < Average.size(); i++)
+	{
+		if (Average[i]->get_indoor() == true)
+		{
+
+			summa = summa + Average[i]->get_averageTemp();
+			count++;
+
+		}
+	}
+
+	IndoorAverageTemp = (summa / count);
 
 }
