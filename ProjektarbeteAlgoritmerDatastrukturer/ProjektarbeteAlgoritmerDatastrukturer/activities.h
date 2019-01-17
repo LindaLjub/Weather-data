@@ -4,6 +4,9 @@
 #include "AverageAll.h"
 #include <vector>
 #include <algorithm>
+#include <iostream>
+
+
 
 class activities
 {
@@ -17,6 +20,7 @@ private:
 
 	std::vector<theData *> doorIn;
 	std::vector<theData *> doorOut;
+	std::vector<theData *> open;
 
 	// variabler
 	std::string answer, searchDate;
@@ -41,14 +45,13 @@ public:
 	void mould();		// Mögelrisk.
 	void printMould(std::string); // printar ut mögelrisk.
 
+	void diff(); // räknar ut differensen mellan inne/ute temp varje dag.
+	void printdiff(); // printar ut störst/minst diff
 
-	void mergeSort(float [], int, int);
-	void merge(float *, int, int);
-
-	void diff();
 	void doorOpen();
+	void hoursOpen();
 	void printDoor();
-	void printdiff();
+
 
 };
 
