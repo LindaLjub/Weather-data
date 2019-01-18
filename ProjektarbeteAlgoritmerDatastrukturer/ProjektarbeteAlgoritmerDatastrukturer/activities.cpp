@@ -126,7 +126,7 @@ void activities::menuOne()
 {
 	bool goMenu = false;
 	do {
-	std::cout << " MAIN MENU\n [1] Indoor data\n [2] Outdoor data\n [4] Temperature differenses Indoor/Outdoor \n [5] When is the balcony door open?\n [6] Exit" << std::endl;
+	std::cout << " MAIN MENU\n [1] Indoor data\n [2] Outdoor data\n [3] Temperature differenses Indoor/Outdoor \n [4] When is the balcony door open?\n [5] Exit" << std::endl;
 	std::cin >> answer;
 	answer = toupper(answer[0]);
 
@@ -140,15 +140,15 @@ void activities::menuOne()
 			menuOutside();
 			goMenu = true;
 			break;
-		case '4':
+		case '3':
 			std::stable_sort(Average.begin(), Average.end(), sortRisk); // Sorterar medeltemp
 			printdiff();
 			break;
-		case '5':
+		case '4':
 			std::stable_sort(open.begin(), open.end(), sortDoor); // Sorterar efter dörr öppen längst tid.
 			printDoor();
 			break;
-		case '6':
+		case '5':
 			goMenu = true;
 			break;
 		default:
@@ -737,7 +737,8 @@ void activities::diff()
 			if (Average[x]->get_a_date() == Average[i]->get_a_date()
 				&& Average[x]->get_indoor() == true && Average[i]->get_indoor() == false)
 			{
-				dummy = Average[x]->get_averageTemp() - Average[i]->get_averageTemp();
+				dummy = abs(Average[x]->get_averageTemp() - Average[i]->get_averageTemp());
+				
 				Average[x]->set_tempDiff(dummy);
 				Average[i]->set_tempDiff(dummy);
 			}
@@ -784,7 +785,7 @@ void activities::doorOpen() {
 
 	for (int x = 0; x < doorIn.size(); x++) // kollar hela ute vektorn.
 	{
-		// TILL ALGORITHM NR 2
+		// TILL dörr-ALGORITHM NR 2
 		check = IndoorAverageTemp - doorIn[0]->get_temp();
 
 		// om skiljer sig från det den brukar vara.
@@ -817,7 +818,7 @@ void activities::doorOpen() {
 	}
 }
 
-// visar om balkongdörren är öppen
+// visar om balkongdörren är öppen.
 void activities::hoursOpen()
 {
 	std::string openedDate, openedTime, closedDate, closedTime;
@@ -858,7 +859,7 @@ void activities::hoursOpen()
 	}
 }
 
-// printar ut när dörren har varit öppen
+// printar ut när dörren har varit öppen.
 void activities::printDoor()
 {
 	std::cout << " --- --- --- --- --- --- --- --- --- -- -- " << std::endl;
@@ -874,16 +875,9 @@ void activities::printDoor()
 	}
 
 	std::cout << "\n";
-
-	std::cout << " --- --- --- --- --- --- --- --- --- -- -- " << std::endl;
-	std::cout << " ALGORITHM TWO SAID" << std::endl;
-	std::cout << " The balcony door was opened the most at: " << std::endl;
-	std::cout << " --- --- --- --- --- --- --- --- --- -- -- " << std::endl;
-
-	std::cout << "\n";
 }
 
-// räknar ut vad temperaturen vanligtvis är inne.
+// räknar ut vad temperaturen vanligtvis är inne. //TILL Dörr-ALGORITHM NR2
 void activities::averageIndoorTemp()
 {
 	float summa = 0;
