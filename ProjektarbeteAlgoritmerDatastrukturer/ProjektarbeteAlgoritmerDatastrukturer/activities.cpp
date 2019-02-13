@@ -119,7 +119,7 @@ bool sortDoor(const theData *a, const theData *b)
 	return a->get_hoursOpened() < b->get_hoursOpened();
 
 };
-
+//test
 
 // Huvudmenyn.
 void activities::menuOne()
