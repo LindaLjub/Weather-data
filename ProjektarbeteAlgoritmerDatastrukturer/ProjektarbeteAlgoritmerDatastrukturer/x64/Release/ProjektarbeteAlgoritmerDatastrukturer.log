@@ -1,6 +1,4 @@
-﻿  activities.cpp
-c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\activities.cpp(1): fatal error C1853: 'x64\Release\ProjektarbeteAlgoritmerDatastrukturer.pch' precompiled header file is from a previous version of the compiler, or the precompiled header is C++ and you are using it from C (or vice versa)
-  AverageAll.cpp
+﻿  AverageAll.cpp
 c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\averageall.cpp(1): fatal error C1853: 'x64\Release\ProjektarbeteAlgoritmerDatastrukturer.pch' precompiled header file is from a previous version of the compiler, or the precompiled header is C++ and you are using it from C (or vice versa)
   ProjektarbeteAD.cpp
 c:\users\linda\source\repos\weather-data\projektarbetealgoritmerdatastrukturer\projektarbetealgoritmerdatastrukturer\projektarbetead.cpp(2): fatal error C1853: 'x64\Release\ProjektarbeteAlgoritmerDatastrukturer.pch' precompiled header file is from a previous version of the compiler, or the precompiled header is C++ and you are using it from C (or vice versa)
